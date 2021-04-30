@@ -75,20 +75,19 @@ class AStarEpsilon(AStar):
         if self.open.is_empty():
             return None
 
-        FocalList = list()
+        FocalList = []
+        FocalList_priority = []
         min_priority_open_n = self.open.peek_next_node().expanding_priority
         Flocal_priority = (1 + self.focal_epsilon) * min_priority_open_n
 
-        if self.max_focal_size is not None:
-            while FocalList.__len__() <= self.max_focal_size and not self.open.is_empty() and \
-                    self.open.peek_next_node().expanding_priority <= Flocal_priority:
-                FocalList.append(self.open.pop_next_node())
+        while not self.open.is_empty() and self.open.peek_next_node().expanding_priority <= Flocal_priority:
+            if self.max_focal_size is not None and FocalList.__len__() > self.max_focal_size:
+                break
+            n = self.open.pop_next_node()
+            FocalList.append(n)
+            FocalList_priority.append(self.within_focal_priority_function(n, problem, self))
 
-        else:
-            while not self.open.is_empty() and self.open.peek_next_node().expanding_priority <= Flocal_priority:
-                FocalList.append(self.open.pop_next_node())
-
-        min_idx = np.argmin([self.within_focal_priority_function(node, problem, self) for node in FocalList])
+        min_idx = np.argmin(np.array(FocalList_priority))
         min_node = FocalList.pop(min_idx)
 
         for n in FocalList:

@@ -80,11 +80,22 @@ class MapProblem(GraphProblem):
         #  days. You can use pd.DataFrame.mean(axis=1) (recommended. see pandas documentation) (3) Assign
         #  self.time_to_goal_history_based_data the result of the mean. Note: the result should be of type np.array.
         #  you can convert a pd.DataFrame to np.array using pd.DataFrame.to_numpy()
+
         days_of_the_week = ['Sun', 'Mon', 'Tue', 'Wed']  # optional variable
+        # set the data file path
+        shortest_paths_history_based_file_path = os.path.join(Consts.DATA_PATH, 'history_4_days_target_549.csv')
 
-        raise NotImplementedError  # TODO: remove this line!
+        # read the csv file
+        df = pd.read_csv(shortest_paths_history_based_file_path)
 
-        assert (type(self.time_to_goal_history_based_data) is np.ndarray)  # self-check
+        # extract the data and convert to np.array.
+        data = df.mean(axis=1).to_numpy()
+
+        # assign the data
+        self.time_to_goal_history_based_data = data
+
+        # self-check
+        assert (type(self.time_to_goal_history_based_data) is np.ndarray)
 
     def expand_state_with_costs(self, state_to_expand: GraphProblemState) -> Iterator[OperatorResult]:
         """
