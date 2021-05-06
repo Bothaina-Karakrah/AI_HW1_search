@@ -77,11 +77,10 @@ class AStarEpsilon(AStar):
 
         FocalList = []
         FocalList_priority = []
-        min_priority_open_n = self.open.peek_next_node().expanding_priority
-        Flocal_priority = (1 + self.focal_epsilon) * min_priority_open_n
+        Flocal_priority = self.open.peek_next_node().expanding_priority * (1 + self.focal_epsilon)
 
         while not self.open.is_empty() and self.open.peek_next_node().expanding_priority <= Flocal_priority:
-            if self.max_focal_size is not None and FocalList.__len__() > self.max_focal_size:
+            if self.max_focal_size is not None and len(FocalList) >= self.max_focal_size:
                 break
             n = self.open.pop_next_node()
             FocalList.append(n)
